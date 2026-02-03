@@ -88,11 +88,18 @@ client.on('interactionCreate', async interaction => {
     }
 
   
-    const existingChannel = guild.channels.cache.find(
-        c => c.name === `ticket-${user.username.toLowerCase()}` && c.parentId === ticketCategoryId
-    );
-    if (existingChannel) 
+   const existingChannel = guild.channels.cache.find(
+    c => c.topic === user.id && c.parentId === ticketCategoryId
+);
+
+if (existingChannel) {
+    if (!interaction.replied && !interaction.deferred) {
         return interaction.reply({ content: 'You have already opened a ticket', ephemeral: true });
+    } else {
+        return interaction.followUp({ content: 'You have already opened a ticket', ephemeral: true });
+    }
+}
+
 
 
     const ticketChannel = await guild.channels.create({

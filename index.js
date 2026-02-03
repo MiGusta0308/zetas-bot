@@ -15,58 +15,9 @@ const client = new Client({
     ]
 });
 
-
-
-// Logowanie bota przy użyciu tokena z ENV
-client.login(process.env.DISCORD_TOKEN)
-  .then(() => console.log("Bot zalogowany!"))
-  .catch(err => console.error("Błąd logowania:", err));
-
-// Opcjonalnie: sprawdzenie, czy Render widzi token
-console.log("DISCORD_TOKEN:", process.env.DISCORD_TOKEN ? "OK" : "BRAK");
-
-// Przykładowy event: bot reaguje po zalogowaniu
 client.on('ready', () => {
   console.log(`Zalogowano jako ${client.user.tag}`);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 client.on('guildMemberAdd', member => {

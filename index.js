@@ -1,10 +1,11 @@
 require("dotenv").config();
 const { 
     Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
-    ChannelType, PermissionFlagsBits, EmbedBuilder 
-} = require("discord.js");
+    ChannelType, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
 
-// 1️⃣ Tworzymy klienta
+
+
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -14,7 +15,60 @@ const client = new Client({
     ]
 });
 
-// 2️⃣ Event powitania
+
+
+// Logowanie bota przy użyciu tokena z ENV
+client.login(process.env.DISCORD_TOKEN)
+  .then(() => console.log("Bot zalogowany!"))
+  .catch(err => console.error("Błąd logowania:", err));
+
+// Opcjonalnie: sprawdzenie, czy Render widzi token
+console.log("DISCORD_TOKEN:", process.env.DISCORD_TOKEN ? "OK" : "BRAK");
+
+// Przykładowy event: bot reaguje po zalogowaniu
+client.on('ready', () => {
+  console.log(`Zalogowano jako ${client.user.tag}`);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 client.on('guildMemberAdd', member => {
     console.log("Dołączył:", member.user.tag); 
     const channelId = '1467588026086719739';
@@ -32,7 +86,7 @@ client.on('guildMemberAdd', member => {
     channel.send({ embeds: [welcomeEmbed] });
 });
 
-// 3️⃣ Event ticketa
+
 client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;
 
@@ -43,13 +97,13 @@ client.on('interactionCreate', async interaction => {
     let ticketTitle;
     let ticketDescription;
 
-    // --- Wybór typu ticketa ---
+
     if (interaction.customId === 'create_ticket') {
-        ticketCategoryId = '1467935963018825941'; // kategoria aplikacja
+        ticketCategoryId = '1467935963018825941'; 
         ticketTitle = `${user.username}'s Application Ticket`;
         ticketDescription = `Please read the requirements in <#1467923593513144320> and answer the questions in this ticket:\n\n1.\n2.\n3.`;
     } else if (interaction.customId === 'create_ticket_help') {
-        ticketCategoryId = '1467973590791094436'; // <-- wstaw ID kategorii help
+        ticketCategoryId = '1467973590791094436'; 
         ticketTitle = `${user.username}'s Help Ticket`;
         ticketDescription = `Welcome to the help ticket! Please describe your issue in detail and our support team will assist you shortly.`;
     } else if (interaction.customId === 'close_ticket') {
@@ -79,17 +133,17 @@ client.on('interactionCreate', async interaction => {
         await interaction.channel.delete();
         return;
     } else {
-        return; // inny przycisk
+        return; 
     }
 
-    // --- Sprawdzenie istniejącego ticketu ---
+  
     const existingChannel = guild.channels.cache.find(
         c => c.name === `ticket-${user.username.toLowerCase()}` && c.parentId === ticketCategoryId
     );
     if (existingChannel) 
         return interaction.reply({ content: 'You have already opened a ticket', ephemeral: true });
 
-    // --- Tworzenie kanału ---
+
     const ticketChannel = await guild.channels.create({
         name: `ticket-${user.username}`,
         type: ChannelType.GuildText,
@@ -98,11 +152,11 @@ client.on('interactionCreate', async interaction => {
         permissionOverwrites: [
             { id: guild.roles.everyone, deny: [PermissionFlagsBits.ViewChannel] },
             { id: user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages] },
-            { id: '1467935721707802675', allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages] } // admin
+            { id: '1467935721707802675', allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages] } 
         ],
     });
 
-    // --- Przyciski ---
+  
     const closeButton = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
             .setCustomId('close_ticket')
@@ -131,11 +185,11 @@ client.on('interactionCreate', async interaction => {
     return interaction.reply({ content: `Your ticket has been created in: ${ticketChannel}`, ephemeral: true });
 });
 
-// 4️⃣ Event ready – wysyłamy przyciski w dwóch kanałach
+
 client.once('ready', async () => {
     console.log("Bot działa:", client.user.tag);
 
-    // --- kanał aplikacja ---
+ 
     const channel1 = await client.channels.fetch('1467923669186510951');
     const embed1 = new EmbedBuilder()
         .setTitle('Want to join ZETAS?')
@@ -155,7 +209,7 @@ client.once('ready', async () => {
 
     await channel1.send({ embeds: [embed1], components: [row1] });
 
-    // --- kanał help ---
+ 
     const channel2 = await client.channels.fetch('1467590287990718655');
     const embed2 = new EmbedBuilder()
         .setTitle('Do you need help?')
@@ -167,7 +221,7 @@ client.once('ready', async () => {
 
     const row2 = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-            .setCustomId('create_ticket_help') // inny customId dla help
+            .setCustomId('create_ticket_help')
             .setLabel('Create ticket')
             .setStyle(ButtonStyle.Primary)
     );
@@ -175,5 +229,5 @@ client.once('ready', async () => {
     await channel2.send({ embeds: [embed2], components: [row2] });
 });
 
-// 5️⃣ Logowanie
+
 client.login(process.env.DISCORD_TOKEN);

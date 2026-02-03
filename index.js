@@ -1,7 +1,6 @@
 require("dotenv").config();
 const { 
-    Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
-    ChannelType, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
+    Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
 
 
 
@@ -20,7 +19,44 @@ client.on('ready', () => {
 });
 
 
+const WELCOME_CHANNEL_ID = '1467588026086719739';
+const LEAVE_CHANNEL_ID = '1467604060617314498';
+
 client.on('guildMemberAdd', member => {
+    console.log("Dołączył:", member.user.tag);
+
+    const channel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
+    if (!channel || !channel.isTextBased()) return;
+
+    const welcomeEmbed = new EmbedBuilder()
+        .setTitle('👋 Welcome to ZETAS server!')
+        .setDescription(`Hi ${member.user}, it's nice to see you on our server!`)
+        .setColor(0x00ff00)
+        .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+        .setTimestamp()
+        .setFooter({ text: 'ZETAS Community' });
+
+    channel.send({ embeds: [welcomeEmbed] });
+});
+
+// EVENT: Opuszczenie członka
+client.on('guildMemberRemove', member => {
+    console.log("Opuscil:", member.user.tag);
+
+    const channel = member.guild.channels.cache.get(LEAVE_CHANNEL_ID);
+    if (!channel || !channel.isTextBased()) return;
+
+    const leaveEmbed = new EmbedBuilder()
+        .setTitle('Bye👋')
+        .setDescription(`We didn't need you anyways ${member.user} 🤡`)
+        .setColor(0xff0000)
+        .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+        .setTimestamp()
+        .setFooter({ text: 'ZETAS Community' });
+
+    channel.send({ embeds: [leaveEmbed] });
+});
+/*client.on('guildMemberAdd', member => {
     console.log("Dołączył:", member.user.tag); 
     const channelId = '1467588026086719739';
     const channel = member.guild.channels.cache.get(channelId);
@@ -53,8 +89,7 @@ client.on('guildMemberRemove', member => {
         .setFooter({ text: 'ZETAS Community' });
 
     channel.send({ embeds: [leaveEmbed] });
-});
-
+}); */
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;

@@ -117,7 +117,7 @@ client.on('interactionCreate', async interaction => {
         if (interaction.isRepliable() && !interaction.replied && !interaction.deferred) {
             try {
                 await interaction.reply({
-                    content: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.',
+                    content: 'An unexpected error has occured. Try again later.',
                     flags: MessageFlags.Ephemeral
                 });
             } catch (replyError) {
@@ -155,7 +155,7 @@ async function handleButtonInteraction(interaction) {
             
         default:
             await interaction.editReply({
-                content: 'Nieznany przycisk. Skontaktuj się z administracją.'
+                content: 'Unknown button. Contact with Administration.'
             });
     }
 }
@@ -170,7 +170,7 @@ async function handleCreateTicket(interaction, type) {
         const existingChannel = guild.channels.cache.get(existingTicketId);
         if (existingChannel) {
             return interaction.editReply({
-                content: `Masz już otwarty ticket: ${existingChannel}.`
+                content: `You have an opened ticket!: ${existingChannel}.`
             });
         } else {
             // Usuń z cache jeśli kanał nie istnieje
@@ -199,7 +199,7 @@ async function handleCreateTicket(interaction, type) {
         const category = guild.channels.cache.get(config.categoryId);
         if (!category) {
             return interaction.editReply({
-                content: 'Błąd: Kategoria ticketów nie została znaleziona.'
+                content: 'Error: Ticket category has not been found.'
             });
         }
 
@@ -258,7 +258,7 @@ async function handleCreateTicket(interaction, type) {
 
         // Odpowiedz użytkownikowi
         await interaction.editReply({
-            content: `Twój ticket został utworzony: ${ticketChannel}`
+            content: `Your ticket has been created: ${ticketChannel}`
         });
 
         console.log(`Utworzono ticket ${type} dla ${user.tag}: ${ticketChannel.id}`);
@@ -267,7 +267,7 @@ async function handleCreateTicket(interaction, type) {
         console.error('Błąd przy tworzeniu ticketu:', error);
         
         await interaction.editReply({
-            content: 'Wystąpił błąd przy tworzeniu ticketu. Spróbuj ponownie lub skontaktuj się z administracją.'
+            content: 'An error has occured when trying to create your ticket, please contact with administration.'
         });
     }
 }
@@ -334,7 +334,7 @@ async function handleCloseTicket(interaction) {
         // Spróbuj wysłać informację o błędzie
         try {
             await interaction.editReply({
-                content: `Wystąpił błąd: ${error.message}`
+                content: `An error has occured: ${error.message}`
             });
         } catch (replyError) {
             console.error('Nie można wysłać odpowiedzi o błędzie:', replyError);

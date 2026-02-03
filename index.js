@@ -37,6 +37,23 @@ client.on('guildMemberAdd', member => {
     channel.send({ embeds: [welcomeEmbed] });
 });
 
+client.on('guildMemberLeave', member => {
+    console.log("Opuscil:", member.user.tag); 
+    const channelId = '1467604060617314498';
+    const channel = member.guild.channels.cache.get(channelId);
+    if (!channel) return;
+
+    const leaveEmbed = new EmbedBuilder()
+        .setTitle(`Bye👋.`)
+        .setDescription(`We didn't need you anyways ${member.user}🤡`)
+        .setColor(0xff0000)
+        .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+        .setTimestamp()
+        .setFooter({ text: 'ZETAS Community' });
+
+    channel.send({ embeds: [leaveEmbed] });
+});
+
 
 client.on('interactionCreate', async interaction => {
     if (!interaction.isButton()) return;

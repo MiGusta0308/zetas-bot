@@ -38,14 +38,15 @@ client.on('guildMemberAdd', member => {
 });
 
 client.on('guildMemberRemove', member => {
-    console.log("Opuscil:", member.user.tag); 
+    console.log("Opuscil:", member.user.tag);
+
     const channelId = '1467604060617314498';
     const channel = member.guild.channels.cache.get(channelId);
-    if (!channel) return;
+    if (!channel || !channel.isTextBased()) return;
 
     const leaveEmbed = new EmbedBuilder()
-        .setTitle(`Bye👋.`)
-        .setDescription(`We didn't need you anyways ${member.user}🤡`)
+        .setTitle('Bye👋')
+        .setDescription(`We didn't need you anyways ${member.user} 🤡`)
         .setColor(0xff0000)
         .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
         .setTimestamp()

@@ -37,7 +37,7 @@ client.on('guildMemberAdd', member => {
     channel.send({ embeds: [welcomeEmbed] });
 });
 
-client.on('guildMemberLeave', member => {
+client.on('guildMemberRemove', member => {
     console.log("Opuscil:", member.user.tag); 
     const channelId = '1467604060617314498';
     const channel = member.guild.channels.cache.get(channelId);
